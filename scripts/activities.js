@@ -108,6 +108,8 @@ window.onload = function () {
 
     initCategories();
 
+    document.querySelector("#categorySelect").addEventListener("change", initActivities);
+
     // for later, when selectedIndex of categoriesDorpdown exists, show activies dropdown
 
 }
@@ -131,5 +133,36 @@ function initCategories() {
         newOption.value = categories[i];
 
         myDropdown.appendChild(newOption);
+    }
+}
+
+function initActivities(event) {
+    // save the category select html element for later
+    let categoriesDropdown = event.target;
+    let activitiesDropdown = document.querySelector("#activitySelect");
+
+    // if there is data, wipe it before we continue in order to avoid adding every activity possible when changing category
+    activitiesDropdown.length = "0";
+
+    // this should probably be a function as I feel I'm re-writing this a lot
+    let defaultOption = document.createElement("option");
+    defaultOption.textContent = "Select an activity";
+    defaultOption.value = "";
+    activitiesDropdown.appendChild(defaultOption);
+
+    // show the activities dropdown
+    activitiesDropdown.style.display = "block";
+
+    // loop through activites, only creating an option for those that match our current category
+    for (let i = 0; i < activities.length; i++) {
+        let currentCategory = activities[i].category;
+        if (currentCategory === categoriesDropdown.value) {
+            let newOption = document.createElement("option");
+            newOption.textContent = activities[i].name;
+            newOption.value = activities[i].id;
+
+            activitiesDropdown.appendChild(newOption);
+        }
+
     }
 }
