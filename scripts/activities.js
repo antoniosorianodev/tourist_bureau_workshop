@@ -139,6 +139,9 @@ function initCategories() {
 }
 
 function initActivities(event) {
+    // this line clears the activity display if the category changes, to avoid showing out of date information
+    document.querySelector("#activityDisplay").innerHTML = null;
+
     // save the category select html element for later
     let categoriesDropdown = event.target;
     let activitiesDropdown = document.querySelector("#activitySelect");
