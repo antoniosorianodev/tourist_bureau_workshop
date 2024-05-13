@@ -104,13 +104,15 @@ let activities = [
 window.onload = function () {
     initDefault();
 
-    document.querySelector("#activitySelect").style.display = "none";
+    let activitySelect = document.querySelector("#activitySelect");
+
+    activitySelect.style.display = "none";
 
     initCategories();
 
     document.querySelector("#categorySelect").addEventListener("change", initActivities);
 
-    // for later, when selectedIndex of categoriesDorpdown exists, show activies dropdown
+    activitySelect.addEventListener("change", displayActivities);
 
 }
 
@@ -164,5 +166,24 @@ function initActivities(event) {
             activitiesDropdown.appendChild(newOption);
         }
 
+    }
+}
+
+function displayActivities(event) {
+    let realIndex = (event.target.selectedIndex - 1);
+    let activityDiv = document.querySelector("#activityDisplay");
+
+    if (realIndex === -1) {
+        activityDiv.innerHTML = null;
+    } else {
+        let currentActivity = activities[realIndex];
+        activityDiv.innerHTML = `
+        <div> Category: ${currentActivity.category} </div>
+        <div> ID: ${currentActivity.id} </div>
+        <div> Name: ${currentActivity.name} </div>
+        <div> Description: ${currentActivity.description} </div>
+        <div> Location: ${currentActivity.location} </div>
+        <div> Price: ${currentActivity.price.toFixed(2)} </div>
+        `;
     }
 }
