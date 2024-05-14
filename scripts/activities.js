@@ -102,13 +102,12 @@ let activities = [
 ];
 
 window.onload = function () {
-    initDefault();
-
     let activitySelect = document.querySelector("#activitySelect");
+    let eTicketForm = document.querySelector("#eTicketForm");
 
+    // hide ticket form and activity dropdown on page load
     activitySelect.style.display = "none";
-
-    document.querySelector("#eTicketForm").style.display = "none";
+    eTicketForm.style.display = "none";
 
     initCategories();
 
@@ -116,7 +115,7 @@ window.onload = function () {
 
     activitySelect.addEventListener("change", displayActivities);
 
-    document.querySelector("#eTicketForm").addEventListener("submit", doNotReloadThePageThatIsAllThisFunctionDoes);
+    eTicketForm.addEventListener("submit", doNotReloadThePageThatIsAllThisFunctionDoes);
 
 }
 
@@ -124,17 +123,15 @@ function doNotReloadThePageThatIsAllThisFunctionDoes(event) {
     event.preventDefault();
 }
 
-function initDefault() {
+function initCategories() {
+    // this first group creates a default option for the categories dropdown
     let categoriesDropdown = document.querySelector("#categorySelect");
     let defaultOption = document.createElement("option");
     defaultOption.textContent = "Select a category";
     defaultOption.value = "";
     categoriesDropdown.appendChild(defaultOption);
-}
 
-function initCategories() {
-    let myDropdown = document.querySelector("#categorySelect");
-
+    // this second group adds the desired categories to the categories dropdown
     for (let i = 0; i < categories.length; i++) {
         let currentCategory = categories[i];
 
@@ -142,7 +139,7 @@ function initCategories() {
         newOption.textContent = currentCategory;
         newOption.value = categories[i];
 
-        myDropdown.appendChild(newOption);
+        categoriesDropdown.appendChild(newOption);
     }
 }
 
@@ -186,14 +183,13 @@ function initActivities(event) {
     }
 }
 
-
 // functional but unoptimized, review later
 function displayActivities(event) {
     let activityDropdown = event.target;
-    let categoriesDropdown = document.querySelector("#categorySelect");;
+    let categoriesDropdown = document.querySelector("#categorySelect");
+    let eTicketForm = document.querySelector("#eTicketForm");
 
-
-    document.querySelector("#eTicketForm").style.display = "none";
+    eTicketForm.style.display = "none";
 
     let realIndex = (event.target.selectedIndex - 1);
     let activityDiv = document.querySelector("#activityDisplay");
@@ -210,19 +206,19 @@ function displayActivities(event) {
             }
         }
 
+        let selectedActivity = activitiesInCategory[realIndex];
+        activityDiv.innerHTML = `
+        <div> Category: ${selectedActivity.category} </div>
+        <div> ID: ${selectedActivity.id} </div>
+        <div> Name: ${selectedActivity.name} </div>
+        <div> Description: ${selectedActivity.description} </div>
+        <div> Location: ${selectedActivity.location} </div>
+        <div> Price: ${selectedActivity.price.toFixed(2)} </div>
+        `;
+
         let price = activitiesInCategory[realIndex].price;
         if (price > 0) {
-            document.querySelector("#eTicketForm").style.display = "block";
+            eTicketForm.style.display = "block";
         }
-
-        let currentActivity = activitiesInCategory[realIndex];
-        activityDiv.innerHTML = `
-            <div> Category: ${currentActivity.category} </div>
-            <div> ID: ${currentActivity.id} </div>
-            <div> Name: ${currentActivity.name} </div>
-            <div> Description: ${currentActivity.description} </div>
-            <div> Location: ${currentActivity.location} </div>
-            <div> Price: ${currentActivity.price.toFixed(2)} </div>
-            `;
     }
 }
