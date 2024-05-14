@@ -108,12 +108,20 @@ window.onload = function () {
 
     activitySelect.style.display = "none";
 
+    document.querySelector("#eTicketForm").style.display = "none";
+
     initCategories();
 
     document.querySelector("#categorySelect").addEventListener("change", initActivities);
 
     activitySelect.addEventListener("change", displayActivities);
 
+    document.querySelector("#eTicketForm").addEventListener("submit", doNotReloadThePageThatIsAllThisFunctionDoes);
+
+}
+
+function doNotReloadThePageThatIsAllThisFunctionDoes(event) {
+    event.preventDefault();
 }
 
 function initDefault() {
@@ -141,6 +149,7 @@ function initCategories() {
 function initActivities(event) {
     // this line clears the activity display if the category changes, to avoid showing out of date information
     document.querySelector("#activityDisplay").innerHTML = "";
+    document.querySelector("#eTicketForm").style.display = "none";
 
     // save the category select html element for later
     let categoriesDropdown = event.target;
@@ -177,21 +186,43 @@ function initActivities(event) {
     }
 }
 
+
+// functional but unoptimized, review later
 function displayActivities(event) {
+    let activityDropdown = event.target;
+    let categoriesDropdown = document.querySelector("#categorySelect");;
+
+
+    document.querySelector("#eTicketForm").style.display = "none";
+
     let realIndex = (event.target.selectedIndex - 1);
     let activityDiv = document.querySelector("#activityDisplay");
 
     if (realIndex === -1) {
         activityDiv.innerHTML = "";
     } else {
-        let currentActivity = activities[realIndex];
+
+        let activitiesInCategory = [];
+        for (let i = 0; i < activities.length; i++) {
+            let currentCategory = activities[i].category;
+            if (currentCategory === categoriesDropdown.value) {
+                activitiesInCategory.push(activities[i])
+            }
+        }
+
+        let price = activitiesInCategory[realIndex].price;
+        if (price > 0) {
+            document.querySelector("#eTicketForm").style.display = "block";
+        }
+
+        let currentActivity = activitiesInCategory[realIndex];
         activityDiv.innerHTML = `
-        <div> Category: ${currentActivity.category} </div>
-        <div> ID: ${currentActivity.id} </div>
-        <div> Name: ${currentActivity.name} </div>
-        <div> Description: ${currentActivity.description} </div>
-        <div> Location: ${currentActivity.location} </div>
-        <div> Price: ${currentActivity.price.toFixed(2)} </div>
-        `;
+            <div> Category: ${currentActivity.category} </div>
+            <div> ID: ${currentActivity.id} </div>
+            <div> Name: ${currentActivity.name} </div>
+            <div> Description: ${currentActivity.description} </div>
+            <div> Location: ${currentActivity.location} </div>
+            <div> Price: ${currentActivity.price.toFixed(2)} </div>
+            `;
     }
 }
