@@ -140,7 +140,7 @@ function initCategories() {
 
 function initActivities(event) {
     // this line clears the activity display if the category changes, to avoid showing out of date information
-    document.querySelector("#activityDisplay").innerHTML = null;
+    document.querySelector("#activityDisplay").innerHTML = "";
 
     // save the category select html element for later
     let categoriesDropdown = event.target;
@@ -158,17 +158,22 @@ function initActivities(event) {
     // show the activities dropdown
     activitiesDropdown.style.display = "block";
 
-    // loop through activites, only creating an option for those that match our current category
-    for (let i = 0; i < activities.length; i++) {
-        let currentCategory = activities[i].category;
-        if (currentCategory === categoriesDropdown.value) {
-            let newOption = document.createElement("option");
-            newOption.textContent = activities[i].name;
-            newOption.value = activities[i].id;
+    let realIndex = (event.target.selectedIndex - 1);
 
-            activitiesDropdown.appendChild(newOption);
+    if (realIndex === -1) {
+        activitiesDropdown.style.display = "none";
+    } else {
+        // loop through activites, only creating an option for those that match our current category
+        for (let i = 0; i < activities.length; i++) {
+            let currentCategory = activities[i].category;
+            if (currentCategory === categoriesDropdown.value) {
+                let newOption = document.createElement("option");
+                newOption.textContent = activities[i].name;
+                newOption.value = activities[i].id;
+
+                activitiesDropdown.appendChild(newOption);
+            }
         }
-
     }
 }
 
@@ -177,7 +182,7 @@ function displayActivities(event) {
     let activityDiv = document.querySelector("#activityDisplay");
 
     if (realIndex === -1) {
-        activityDiv.innerHTML = null;
+        activityDiv.innerHTML = "";
     } else {
         let currentActivity = activities[realIndex];
         activityDiv.innerHTML = `
